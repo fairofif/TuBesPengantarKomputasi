@@ -1,3 +1,57 @@
+"""
+===================================================================================================
+Kelompok            : 8
+Anggota             : - 16520201 | Kirana Shely S
+                      - 16520251 | Rofif Fairuz Hawary
+                      - 16520261 | Khalisa Prabhasalma
+                      - 16520281 | Vixell
+Deskripsi Program   : Program ini untuk menggambarkan bagaimana sistem ticketing cinema
+
+====================================================================================================
+
+Variable Dictionary:
+printSeat():
+Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
+
+changeVisualSB():
+Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
+
+getAudience():
+j_org = int, jumlah orang dalam satu pesanan
+slot_R = int, jumlah kursi kosong reguler
+slot_SB = int, jumlah kursi kosong sweetbox
+status_slot = boolean, sebagai penanda kursi masih muat untuk jumlah j_org atau tidak
+
+typeChoice():
+j_org = int, jumlah orang dalam satu pesanan
+type = string, berisi jenis kursi pilihan sb atau r
+slot_SB = int, jumlah kursi kosong sweetbox
+slot_R = int, jumlah kursi kosong reguler
+
+countSlotR():
+slot_R = int, jumlah kursi kosong reguler
+
+countSlotSB():
+slot_SB = slot_SB = int, jumlah kursi kosong sweetbox
+
+sweetBoxSeat():
+j_org = j_org = int, jumlah orang dalam satu pesanan
+temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
+type = string, berisi jenis kursi pilihan sb atau r
+rows = baris pilihan customer
+column = kolom pilihan customer
+
+regularSeat():
+j_org = j_org = int, jumlah orang dalam satu pesanan
+temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
+type = string, berisi jenis kursi pilihan sb atau r
+rows = baris pilihan customer
+column = kolom pilihan customer
+"""
+
+
+
+
 # fungsi untuk traversal kondisi seluruh kursi di studio
 def printSeat():
     for j in range(5):
@@ -109,6 +163,7 @@ def countSlotSB(slot_SB):
     print("slot SB adalah", slot_SB)
     return slot_SB
 
+# fungsi untuk memilih kursi sweetbox
 def sweetBoxSeat(j_org, type, rows, column):
     temp = j_org
     while temp > 0:
@@ -129,7 +184,8 @@ def sweetBoxSeat(j_org, type, rows, column):
                 temp -= 2
         else:
             print("Kursi sweetbox tsb sudah dibooking")
-        
+
+# fungsi untuk memilih kursi reguler satu per satu   
 def regulerSeat(j_org, type, rows, column):
     temp = j_org
     while temp > 0:
@@ -147,11 +203,15 @@ def regulerSeat(j_org, type, rows, column):
     print()
 
 #----------------- MAIN --------------------
-seat = [["R" for j in range(10)] for i in range(16)]
-changeVisualSB(seat)
-printSeat()
-selesai = False
-while selesai == False:
+seat = [["R" for j in range(10)] for i in range(16)]    # membuat default seat
+changeVisualSB(seat)    # merubah visual sweet box menjadi char "R"
+printSeat()     # mentraversalkan kondisi seat awal
+selesai = False         
+while selesai == False: # looping hingga waiters mengatakan tidak melanjutkan ambil cust
+   
+    # semua variable yang bersifat akan digunakan terus menerus dan berubah2 nilainya
+    # di declare terlebih dahulu ke nilai yang salah sehingga dapat terus digunakan ke dalam fungsi fungsi
+    # yang telah ada, karena akan terjadi looping yang akan menggunakan fungsi secara terus menerus
     j_org = 0
     type = "empty"
     slot_R = 0
@@ -167,7 +227,7 @@ while selesai == False:
     if status_slot == True:
         if type == "sb":
             sweetBoxSeat(j_org,type, rows, column)
-        else:
+        else:   # type = r
             regulerSeat(j_org, type, rows, column)
         printSeat()
 

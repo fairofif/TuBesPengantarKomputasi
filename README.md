@@ -3,6 +3,8 @@ Ini project tugas besar mata kuliah pengantar komputasi semester 1 TPB ITB
 
 Project ini menggambarkan secara garis besar bagaimana sistem ticketing cinema
 
+Kebutuhan project ini lebih ditekankan dalam penggunaan matriks, looping, function
+
 Anggota Kelompok 8:
 Project : cinema ticketing
 kirana shely s          - 16520201
