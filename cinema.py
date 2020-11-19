@@ -8,52 +8,20 @@ Anggota             : - 16520201 | Kirana Shely S
 Deskripsi Program   : Program ini untuk menggambarkan bagaimana sistem ticketing cinema
 
 ====================================================================================================
+To be added:
+calc total bill function
+function main intro
+function waiters intro
+function to print ticket
+looping in main section (buat balik lagi ke main intro dan lanjut ambil pesanan)
 
-Variable Dictionary:
-printSeat():
-Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
-
-changeVisualSB():
-Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
-
-getAudience():
-j_org = int, jumlah orang dalam satu pesanan
-slot_R = int, jumlah kursi kosong reguler
-slot_SB = int, jumlah kursi kosong sweetbox
-status_slot = boolean, sebagai penanda kursi masih muat untuk jumlah j_org atau tidak
-
-typeChoice():
-j_org = int, jumlah orang dalam satu pesanan
-type = string, berisi jenis kursi pilihan sb atau r
-slot_SB = int, jumlah kursi kosong sweetbox
-slot_R = int, jumlah kursi kosong reguler
-
-countSlotR():
-slot_R = int, jumlah kursi kosong reguler
-
-countSlotSB():
-slot_SB = slot_SB = int, jumlah kursi kosong sweetbox
-
-sweetBoxSeat():
-j_org = j_org = int, jumlah orang dalam satu pesanan
-temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
-type = string, berisi jenis kursi pilihan sb atau r
-rows = baris pilihan customer
-column = kolom pilihan customer
-
-regularSeat():
-j_org = j_org = int, jumlah orang dalam satu pesanan
-temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
-type = string, berisi jenis kursi pilihan sb atau r
-rows = baris pilihan customer
-column = kolom pilihan customer
 """
-
-
-
 
 # fungsi untuk traversal kondisi seluruh kursi di studio
 def printSeat():
+    # Kamus:
+    # Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
+
     for j in range(5):
         print(end="          ")
         for i in range(16):
@@ -101,12 +69,22 @@ def printSeat():
 
 # fungsi untuk mengubah display sweetbox menjadi character S
 def changeVisualSB(seat):
+    # Kamus :
+    # Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     for j in range(1,3):
         for i in range(16):
             seat[i][j] = "S"
 
 # fungsi untuk mengamil jumlah orang dalam 1 pesanan
 def getAudience(j_org, slot_R, slot_SB, status_slot):
+    """===================================================================================
+    Kamus :
+    j_org = int, jumlah orang dalam satu pesanan
+    slot_R = int, jumlah kursi kosong reguler
+    slot_SB = int, jumlah kursi kosong sweetbox
+    status_slot = boolean, sebagai penanda kursi masih muat untuk jumlah j_org atau tidak 
+    ======================================================================================"""
+
     status_slot = False
     print("slot SB adalah", slot_SB)
     j_org = int(input("Jumlah orang: "))
@@ -122,6 +100,13 @@ def getAudience(j_org, slot_R, slot_SB, status_slot):
 
 # fungsi untuk memilih pilian kursi customer
 def typeChoice(j_org, type, slot_SB, slot_R):
+    """===========================================
+    Kamus :
+    j_org = int, jumlah orang dalam satu pesanan
+    type = string, berisi jenis kursi pilihan sb atau r
+    slot_SB = int, jumlah kursi kosong sweetbox
+    slot_R = int, jumlah kursi kosong reguler
+    ==============================================="""
 
     print("Pilih tipe kursimu: ")
     print("Sweet Box (sb)")
@@ -147,6 +132,8 @@ def typeChoice(j_org, type, slot_SB, slot_R):
 
 # fungsi untuk menghitung jumlah kursi reguler yang kosong
 def countSlotR(slot_R):
+    # Kamus :
+    # slot_R = int, jumlah kursi kosong reguler
     for j in range(0,10):
         for i in range(16):
             if seat[i][j] == "R":
@@ -156,6 +143,8 @@ def countSlotR(slot_R):
 
 # fungsi untuk menghitung jumlah kursi sweetbox yang kosong    
 def countSlotSB(slot_SB):
+    # Kamus :
+    # slot_SB = slot_SB = int, jumlah kursi kosong sweetbox
     for j in range(1,3):
         for i in range(16):
             if seat[i][j] == "S":
@@ -165,6 +154,15 @@ def countSlotSB(slot_SB):
 
 # fungsi untuk memilih kursi sweetbox
 def sweetBoxSeat(j_org, type, rows, column):
+    """===============================================================================================
+    Kamus :
+    j_org = j_org = int, jumlah orang dalam satu pesanan
+    temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
+    type = string, berisi jenis kursi pilihan sb atau r
+    rows = baris pilihan customer
+    column = kolom pilihan customer
+    =================================================================================================="""
+
     temp = j_org
     while temp > 0:
         rows = int(input("Baris kursi: "))
@@ -187,6 +185,15 @@ def sweetBoxSeat(j_org, type, rows, column):
 
 # fungsi untuk memilih kursi reguler satu per satu   
 def regulerSeat(j_org, type, rows, column):
+    """============================================================================================
+    Kamus :
+    j_org = j_org = int, jumlah orang dalam satu pesanan
+    temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
+    type = string, berisi jenis kursi pilihan sb atau r
+    rows = baris pilihan customer
+    column = kolom pilihan customer
+    ==============================================================================================="""
+
     temp = j_org
     while temp > 0:
         rows = int(input("Baris kursi: "))
@@ -204,7 +211,7 @@ def regulerSeat(j_org, type, rows, column):
 
 #----------------- MAIN --------------------
 seat = [["R" for j in range(10)] for i in range(16)]    # membuat default seat
-changeVisualSB(seat)    # merubah visual sweet box menjadi char "R"
+changeVisualSB(seat)    # merubah visual sweet box menjadi char "SB"
 printSeat()     # mentraversalkan kondisi seat awal
 selesai = False         
 while selesai == False: # looping hingga waiters mengatakan tidak melanjutkan ambil cust
@@ -227,7 +234,7 @@ while selesai == False: # looping hingga waiters mengatakan tidak melanjutkan am
     if status_slot == True:
         if type == "sb":
             sweetBoxSeat(j_org,type, rows, column)
-        else:   # type = r
+        else:   # type = r  
             regulerSeat(j_org, type, rows, column)
         printSeat()
 
