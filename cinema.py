@@ -9,13 +9,18 @@ Deskripsi Program   : Program ini untuk menggambarkan bagaimana sistem ticketing
 
 ====================================================================================================
 To be added:
-calc total bill function
 function main intro
 function waiters intro
-function to print ticket
 looping in main section (buat balik lagi ke main intro dan lanjut ambil pesanan)
 
 """
+def intro():
+    print("Selamat datang di CGV. Pilih peran kamu!")
+    print("1. Waiters\n2. Customers")
+
+def waitersMenu():
+    print("== Waiters Menu ==")
+    print("1. Ambil order\n2. Kosongkan Beberapa Seat\n3. Close Order")
 
 # fungsi untuk traversal kondisi seluruh kursi di studio
 def printSeat():
@@ -153,7 +158,7 @@ def countSlotSB(slot_SB):
     return slot_SB
 
 # fungsi untuk memilih kursi sweetbox
-def sweetBoxSeat(j_org, type, rows, column):
+def sweetBoxSeat(j_org, type, rows, column, tagged_col, tagged_row):
     """===============================================================================================
     Kamus :
     j_org = j_org = int, jumlah orang dalam satu pesanan
@@ -175,16 +180,25 @@ def sweetBoxSeat(j_org, type, rows, column):
             if column % 2 == 0:    # jika sweetbox pilihan genap
                 seat[column][rows] = "X"
                 seat[column+1][rows] = "X"
+                tagged_col = tagged_col + [column]
+                tagged_col = tagged_col + [column+1]
+                tagged_row = tagged_row + [rows]
+                tagged_row = tagged_row + [rows]
                 temp -= 2
             else:   # jika sweetbox pilihan ganjil
                 seat[column][rows] = "X"
                 seat[column-1][rows] = "X"
+                tagged_col = tagged_col + [column-1]
+                tagged_col = tagged_col + [column]
+                tagged_row = tagged_row + [rows]
+                tagged_row = tagged_row + [rows]
                 temp -= 2
         else:
             print("Kursi sweetbox tsb sudah dibooking")
+    return tagged_col, tagged_row
 
 # fungsi untuk memilih kursi reguler satu per satu   
-def regulerSeat(j_org, type, rows, column):
+def regulerSeat(j_org, type, rows, column, tagged_col, tagged_row):
     """============================================================================================
     Kamus :
     j_org = j_org = int, jumlah orang dalam satu pesanan
@@ -192,8 +206,11 @@ def regulerSeat(j_org, type, rows, column):
     type = string, berisi jenis kursi pilihan sb atau r
     rows = baris pilihan customer
     column = kolom pilihan customer
+    tagged_col = list, untuk mengumpulkan kolom kursi yang dibook cust
+    tagged_row = list, untuk mengumpulkan baris kursi ynag dibook cust
     ==============================================================================================="""
-
+    tagged_col = []
+    tagged_row = []
     temp = j_org
     while temp > 0:
         rows = int(input("Baris kursi: "))
@@ -204,42 +221,190 @@ def regulerSeat(j_org, type, rows, column):
             column = int(input("Kolom kursi: "))
         if seat[column][rows] == "R":
             seat[column][rows] = "X"
+            tagged_col = tagged_col + [column]
+            tagged_row = tagged_row + [rows]
             temp -= 1
         else:
             print("Kursi reguler tsb sudah dibooking")
+    return tagged_col, tagged_row
+
+# fungsi untuk melakukan tagihan dan pembayaran
+def billing(j_org, type, cost):
+    if type == "sb":
+        if j_org%2 == 0: # jumlah orang genap
+            cost = 110000 * (j_org/2)
+        else:           # jumlah orang ganjil
+            cost = 110000 * ((j_org+1)/2)
+    else:
+        cost = j_org * 50000
+    print("Total tagihan : " + str(cost))
+    money = int(input("Masukkan uang : "))
+    while money < cost:
+        money = int(input("Nilai uang kurang. Harap masukkan ulang nominal.\nMasukkan uang : "))
+    print("Ticket telah terbayar!")
+    print("Kembalian : " + str(money - cost))
+    print("Grab your ticket!")
     print()
+
+# fungsi untuk mencetak tiket
+def ticket(j_org, type, tagged_col, tagged_row):
+    if type == "sb":
+        index_tag = 0
+        for i in range((j_org+1)//2):
+            print("------------------------------")
+            print("|  ", end="")
+            print("Ticket #", i+1, "               |")
+            print("|  ", end="")
+            print("Seat :                    |")
+            print("| (Kolom,Baris) : (", tagged_col[index_tag],",", tagged_row[index_tag],")  |")
+            print("------------------------------")
+            index_tag += 2
+    else:
+        for i in range(j_org):
+            print("------------------------------")
+            print("|  ", end="")
+            print("Ticket #", i+1, "               |")
+            print("|  ", end="")
+            print("Seat :                    |")
+            print("| (Kolom,Baris) : (", tagged_col[i],",", tagged_row[i],")  |")
+            print("------------------------------")
+
+def deleteSeat(seat):
+    printSeat()
+    print("Pilih nomor seat yang akan dikosongkan")
+    column = int(input("Kolom : "))
+    while column < 0 or column > 15:
+        column = int(input("Masukan salah!\nKolom : "))
+    rows = int(input("Baris : "))
+    while rows < 0 or rows > 9:
+        rows = int(input("Masukan salah!\nBaris : "))
+    if rows == 1 or rows == 2:
+        if seat[column][rows] == "S":
+            print("Seat tersebut kosong")
+        else: # kondisi seat = "X"
+            if column%2 == 0:
+                seat[column][rows] = "S"
+                seat[column+1][rows] = "S"
+            else:
+                seat[column][rows] = "S"
+                seat[column-1][rows] = "S"
+            print("Seat berhasil dikosongkan")
+    else: # untuk reguler
+        if seat[column][rows] == "R":
+            print("Seat sudah kosong")
+        else: # kondisi "X" status booked
+            seat[column][rows] = "R"
+            print("Seat berhasil dikosongkan")
 
 #----------------- MAIN --------------------
 seat = [["R" for j in range(10)] for i in range(16)]    # membuat default seat
 changeVisualSB(seat)    # merubah visual sweet box menjadi char "SB"
-printSeat()     # mentraversalkan kondisi seat awal
-selesai = False         
-while selesai == False: # looping hingga waiters mengatakan tidak melanjutkan ambil cust
-   
-    # semua variable yang bersifat akan digunakan terus menerus dan berubah2 nilainya
-    # di declare terlebih dahulu ke nilai yang salah sehingga dapat terus digunakan ke dalam fungsi fungsi
-    # yang telah ada, karena akan terjadi looping yang akan menggunakan fungsi secara terus menerus
-    j_org = 0
-    type = "empty"
-    slot_R = 0
-    slot_SB = 0
-    status_slot = False
-    rows = -1
-    column = -1
-    slot_R = countSlotR(slot_R)
-    slot_SB = countSlotSB(slot_SB)
-    j_org, status_slot = getAudience(j_org, slot_R, slot_SB, status_slot)
-    type, status_slot = typeChoice(j_org,type, slot_SB, slot_R)
 
-    if status_slot == True:
-        if type == "sb":
-            sweetBoxSeat(j_org,type, rows, column)
-        else:   # type = r  
-            regulerSeat(j_org, type, rows, column)
-        printSeat()
+close = False
+while close == False:
+    intro()
+    pilihan_intro = int(input("Pilih Peran (1 atau 2)"))
+    while pilihan_intro != 1 and pilihan_intro != 2:
+        pilihan_intro = int(input("Masukan salah!\nPilih Peran (1 atau 2)"))
+    
+    if pilihan_intro == 2:  # sebagai customer
+        selesai_order = False         
+        while selesai_order == False: # looping hingga customer stop order
+            #===========================================================================================================
+            # semua variable yang bersifat akan digunakan terus menerus dan berubah2 nilainya
+            # di declare terlebih dahulu ke nilai yang salah sehingga dapat terus digunakan ke dalam fungsi fungsi
+            # yang telah ada, karena akan terjadi looping yang akan menggunakan fungsi secara terus menerus
+            j_org = 0
+            type = "empty"
+            slot_R = 0
+            slot_SB = 0
+            status_slot = False
+            rows = -1
+            column = -1
+            cost = 0
+            tagged_col = []
+            tagged_row = []
+            #============================================================================================================
+            printSeat()
+            slot_R = countSlotR(slot_R)
+            slot_SB = countSlotSB(slot_SB)
+            j_org, status_slot = getAudience(j_org, slot_R, slot_SB, status_slot)
+            type, status_slot = typeChoice(j_org,type, slot_SB, slot_R)
 
-    pick = input("Ingin lanjut mengambil pesanan customer? y/t:")
-    while pick != "t" and pick != "y":
-        pick = input("Ulangi masukan: ")
-    if pick == "t":
-        selesai = True 
+            if status_slot == True:
+                if type == "sb":
+                    tagged_col, tagged_row = sweetBoxSeat(j_org,type, rows, column, tagged_col, tagged_row)
+                    printSeat()
+                    billing(j_org,type,cost)
+                    ticket(j_org,type,tagged_col,tagged_row)
+                else:   # type = r  
+                    tagged_col, tagged_row = regulerSeat(j_org, type, rows, column, tagged_col, tagged_row)
+                    printSeat()
+                    billing(j_org,type,cost)
+                    ticket(j_org,type,tagged_col,tagged_row)
+
+            pick = input("Ingin menambah pesanan? y/t:")
+            while pick != "t" and pick != "y":
+                pick = input("Ulangi masukan: ")
+            if pick == "t":
+                selesai_order = True 
+        
+    else:   # sebagai waiters
+        waitersMenu()
+        pilihan_waiters = int(input("Masukan pilihan menu : "))
+        while pilihan_waiters < 1 or pilihan_waiters > 3:
+            pilihan_waiters = int(input("Masukan salah!\nMasukan pilihan menu : "))
+        
+        if pilihan_waiters == 2: # memilih kosongkan seat
+            stop_delete = False
+            while stop_delete == False:
+                deleteSeat(seat)
+                pick = input("Ingin kosongkan seat lain? (y/t) : ")
+                while pick != "y" and pick != "t":
+                    pick = input("Masukan salah!\nIngin kosongkan seat lain? (y/t) : ")
+                if pick == "t":
+                    stop_delete = True
+        elif pilihan_waiters == 1: # ambil orderan
+            selesai_order = False         
+            while selesai_order == False: # looping hingga stop order
+                #===========================================================================================================
+                # semua variable yang bersifat akan digunakan terus menerus dan berubah2 nilainya
+                # di declare terlebih dahulu ke nilai yang salah sehingga dapat terus digunakan ke dalam fungsi fungsi
+                # yang telah ada, karena akan terjadi looping yang akan menggunakan fungsi secara terus menerus
+                j_org = 0
+                type = "empty"
+                slot_R = 0
+                slot_SB = 0
+                status_slot = False
+                rows = -1
+                column = -1
+                cost = 0
+                tagged_col = []
+                tagged_row = []
+                #============================================================================================================
+                printSeat()
+                slot_R = countSlotR(slot_R)
+                slot_SB = countSlotSB(slot_SB)
+                j_org, status_slot = getAudience(j_org, slot_R, slot_SB, status_slot)
+                type, status_slot = typeChoice(j_org,type, slot_SB, slot_R)
+
+                if status_slot == True:
+                    if type == "sb":
+                        tagged_col, tagged_row = sweetBoxSeat(j_org,type, rows, column, tagged_col, tagged_row)
+                        printSeat()
+                        billing(j_org,type,cost)
+                        ticket(j_org,type,tagged_col,tagged_row)
+                    else:   # type = r  
+                        tagged_col, tagged_row = regulerSeat(j_org, type, rows, column, tagged_col, tagged_row)
+                        printSeat()
+                        billing(j_org,type,cost)
+                        ticket(j_org,type,tagged_col,tagged_row)
+
+                pick = input("Ingin menambah pesanan? y/t:")
+                while pick != "t" and pick != "y":
+                    pick = input("Ulangi masukan: ")
+                if pick == "t":
+                    selesai_order = True 
+        
+        else: # pilihan 3, close order cinema
+            close = True
