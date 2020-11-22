@@ -93,7 +93,6 @@ def getAudience(j_org, slot_R, slot_SB, status_slot):
     ======================================================================================"""
 
     status_slot = False
-    print("slot SB adalah", slot_SB)
     j_org = int(input("Jumlah orang: "))
     while j_org < 1 or j_org > 8:
         print("Jumlah orang tidak kurang dari 1 dan tidak lebih dari 8")
@@ -282,12 +281,15 @@ def ticket(j_org, type, tagged_col, tagged_row):
     tagged_row = list, untuk mengumpulkan baris kursi ynag dibook cust
     index_tag = sebagai indeks list tagged yang diincrement sebanyak +2
     """
+
     if type == "sb":    # type sweetbox
         index_tag = 0   # declare index untuk list tagged = 0
         for i in range((j_org+1)//2):   # karena type sb maka ditambah 1 dan dibagi 2 dan dibulatkan ke bawah
             print("------------------------------")
             print("|  ", end="")
             print("Ticket #", i+1, "               |")
+            print("|  ", end="")
+            print("[SweetBox]                |")
             print("|  ", end="")
             print("Seat :                    |")
             print("| (Kolom,Baris) : (", tagged_col[index_tag],",", tagged_row[index_tag],")  |")
@@ -298,6 +300,8 @@ def ticket(j_org, type, tagged_col, tagged_row):
             print("------------------------------")
             print("|  ", end="")
             print("Ticket #", i+1, "               |")
+            print("|  ", end="")
+            print("[Reguler]                 |")
             print("|  ", end="")
             print("Seat :                    |")
             print("| (Kolom,Baris) : (", tagged_col[i],",", tagged_row[i],")  |")
@@ -332,6 +336,7 @@ def deleteSeat(seat):
                 seat[column][rows] = "S"
                 seat[column-1][rows] = "S"
             print("Seat berhasil dikosongkan")
+            printSeat()
     else: # untuk reguler
         if seat[column][rows] == "R":
             printSeat()
