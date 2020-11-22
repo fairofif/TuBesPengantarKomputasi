@@ -8,17 +8,19 @@ Anggota             : - 16520201 | Kirana Shely S
 Deskripsi Program   : Program ini untuk menggambarkan bagaimana sistem ticketing cinema
 
 ====================================================================================================
-To be added:
-function main intro
-function waiters intro
-looping in main section (buat balik lagi ke main intro dan lanjut ambil pesanan)
-
 """
+
+import os
+
+# untuk menampilkan menu dengan 2 pilihan di Intro section
 def intro():
+    os.system("cls")
     print("Selamat datang di CGV. Pilih peran kamu!")
     print("1. Waiters\n2. Customers")
 
+# untuk menampilkan menu waiters dengan 3 pilihan
 def waitersMenu():
+    os.system("cls")
     print("== Waiters Menu ==")
     print("1. Ambil order\n2. Kosongkan Beberapa Seat\n3. Close Order")
 
@@ -26,11 +28,11 @@ def waitersMenu():
 def printSeat():
     # Kamus:
     # Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
-
+    os.system("cls")
     for j in range(5):
         print(end="          ")
         for i in range(16):
-            if i == 3 or i == 11:
+            if i == 3 or i == 11: # ini untuk memberikan celah besar di line tertentu(sebagai jalan pengunjung)S
                 if j == 0:
                     print(" K ", end="    ")
                 elif j == 1:
@@ -55,7 +57,7 @@ def printSeat():
         print()    
     print(end="         ")                
     for i in range(10):
-        if i == 3 or i == 11:
+        if i == 3 or i == 11:           # ini untuk memberikan celah besar di line tertentu(sebagai jalan pengunjung)
             print(" ", i , end="    ")
         else:
             print(" ", i , end=" ")
@@ -75,10 +77,10 @@ def printSeat():
 # fungsi untuk mengubah display sweetbox menjadi character S
 def changeVisualSB(seat):
     # Kamus :
-    # Seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
+    # seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     for j in range(1,3):
         for i in range(16):
-            seat[i][j] = "S"
+            seat[i][j] = "S"    # seat sweetbox akan diubah menjadi "S" logonya
 
 # fungsi untuk mengamil jumlah orang dalam 1 pesanan
 def getAudience(j_org, slot_R, slot_SB, status_slot):
@@ -139,6 +141,7 @@ def typeChoice(j_org, type, slot_SB, slot_R):
 def countSlotR(slot_R):
     # Kamus :
     # slot_R = int, jumlah kursi kosong reguler
+    # seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     for j in range(0,10):
         for i in range(16):
             if seat[i][j] == "R":
@@ -150,6 +153,7 @@ def countSlotR(slot_R):
 def countSlotSB(slot_SB):
     # Kamus :
     # slot_SB = slot_SB = int, jumlah kursi kosong sweetbox
+    # seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     for j in range(1,3):
         for i in range(16):
             if seat[i][j] == "S":
@@ -166,20 +170,27 @@ def sweetBoxSeat(j_org, type, rows, column, tagged_col, tagged_row):
     type = string, berisi jenis kursi pilihan sb atau r
     rows = baris pilihan customer
     column = kolom pilihan customer
+    tagged_col = list, untuk mengumpulkan kolom kursi yang dibook cust
+    tagged_row = list, untuk mengumpulkan baris kursi ynag dibook cust
+    seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     =================================================================================================="""
 
-    temp = j_org
+    temp = j_org    # declare temp sebagai wadah pengganti nilai j_org
     while temp > 0:
         rows = int(input("Baris kursi: "))
         column = int(input("Kolom kursi: "))
+        # error handling saat input rows dan column
         while rows < 1 or rows > 2 or column < 0 or column > 15:
             print("baris sweetbox hanya tersedia dari 1-2, kolom sweetbox hanya 0-15")
             rows = int(input("Baris kursi: "))
             column = int(input("Kolom kursi: "))
+        # mengganti logo seat pilihan dengan X sebagai tanda booked
         if seat[column][rows] == "S":   # jika kursi pilihan kosong
             if column % 2 == 0:    # jika sweetbox pilihan genap
                 seat[column][rows] = "X"
                 seat[column+1][rows] = "X"
+                # menambahkan kolom dan baris pilihan ke list tagged
+                # untuk digunakan saat mencetak tiket
                 tagged_col = tagged_col + [column]
                 tagged_col = tagged_col + [column+1]
                 tagged_row = tagged_row + [rows]
@@ -188,6 +199,8 @@ def sweetBoxSeat(j_org, type, rows, column, tagged_col, tagged_row):
             else:   # jika sweetbox pilihan ganjil
                 seat[column][rows] = "X"
                 seat[column-1][rows] = "X"
+                # menambahkan kolom dan baris pilihan ke list tagged
+                # untuk digunakan saat mencetak tiket
                 tagged_col = tagged_col + [column-1]
                 tagged_col = tagged_col + [column]
                 tagged_row = tagged_row + [rows]
@@ -201,26 +214,30 @@ def sweetBoxSeat(j_org, type, rows, column, tagged_col, tagged_row):
 def regulerSeat(j_org, type, rows, column, tagged_col, tagged_row):
     """============================================================================================
     Kamus :
-    j_org = j_org = int, jumlah orang dalam satu pesanan
+    j_org = int, jumlah orang dalam satu pesanan
     temp = int, sebagai wadah nilai j_org, agar nilai j_org tidak berubah saat digunakan di fungsi lain
     type = string, berisi jenis kursi pilihan sb atau r
     rows = baris pilihan customer
     column = kolom pilihan customer
     tagged_col = list, untuk mengumpulkan kolom kursi yang dibook cust
     tagged_row = list, untuk mengumpulkan baris kursi ynag dibook cust
+    seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
     ==============================================================================================="""
-    tagged_col = []
-    tagged_row = []
-    temp = j_org
+
+    temp = j_org    # temp sebagai wadah nilai j_org
     while temp > 0:
         rows = int(input("Baris kursi: "))
         column = int(input("Kolom kursi: "))
+        # error handling saat input rows dan column
         while rows < 0 or rows > 9 or column < 0 or column > 15 or rows == 1 or rows == 2:
             print("baris reguler hanya tersedia dari 3-9 dan 0, kolom sweetbox hanya 0-15")
             rows = int(input("Baris kursi: "))
             column = int(input("Kolom kursi: "))
+        # menandai seat dengan X sebagai tanda booked
         if seat[column][rows] == "R":
             seat[column][rows] = "X"
+            # menambahkan kolom dan baris pilihan ke list tagged
+            # untuk digunakan saat mencetak tiket
             tagged_col = tagged_col + [column]
             tagged_row = tagged_row + [rows]
             temp -= 1
@@ -230,15 +247,24 @@ def regulerSeat(j_org, type, rows, column, tagged_col, tagged_row):
 
 # fungsi untuk melakukan tagihan dan pembayaran
 def billing(j_org, type, cost):
+    """====================================================
+    Kamus:
+    j_org = int, jumlah orang dalam satu pesanan
+    type = string, berisi jenis kursi pilihan sb atau r
+    cost = int, biaya yang perlu dibayar
+    money = int, masukan uang dari customer
+    ======================================================="""
+
     if type == "sb":
         if j_org%2 == 0: # jumlah orang genap
-            cost = 110000 * (j_org/2)
+            cost = int(110000 * (j_org/2))
         else:           # jumlah orang ganjil
-            cost = 110000 * ((j_org+1)/2)
+            cost = int(110000 * ((j_org+1)/2))
     else:
-        cost = j_org * 50000
+        cost = int(j_org * 50000)
     print("Total tagihan : " + str(cost))
     money = int(input("Masukkan uang : "))
+    # error handling jika uang kurang
     while money < cost:
         money = int(input("Nilai uang kurang. Harap masukkan ulang nominal.\nMasukkan uang : "))
     print("Ticket telah terbayar!")
@@ -248,9 +274,17 @@ def billing(j_org, type, cost):
 
 # fungsi untuk mencetak tiket
 def ticket(j_org, type, tagged_col, tagged_row):
-    if type == "sb":
-        index_tag = 0
-        for i in range((j_org+1)//2):
+    """
+    Kamus:
+    j_org = int, jumlah orang dalam satu pesanan
+    type = string, berisi jenis kursi pilihan sb atau r
+    tagged_col = list, untuk mengumpulkan kolom kursi yang dibook cust
+    tagged_row = list, untuk mengumpulkan baris kursi ynag dibook cust
+    index_tag = sebagai indeks list tagged yang diincrement sebanyak +2
+    """
+    if type == "sb":    # type sweetbox
+        index_tag = 0   # declare index untuk list tagged = 0
+        for i in range((j_org+1)//2):   # karena type sb maka ditambah 1 dan dibagi 2 dan dibulatkan ke bawah
             print("------------------------------")
             print("|  ", end="")
             print("Ticket #", i+1, "               |")
@@ -258,9 +292,9 @@ def ticket(j_org, type, tagged_col, tagged_row):
             print("Seat :                    |")
             print("| (Kolom,Baris) : (", tagged_col[index_tag],",", tagged_row[index_tag],")  |")
             print("------------------------------")
-            index_tag += 2
-    else:
-        for i in range(j_org):
+            index_tag += 2 # karena type sb maka diincrement sebanyak +2
+    else:   # type reguler
+        for i in range(j_org):  # type reguler tidak perlu menggunakan index pengganti
             print("------------------------------")
             print("|  ", end="")
             print("Ticket #", i+1, "               |")
@@ -269,16 +303,25 @@ def ticket(j_org, type, tagged_col, tagged_row):
             print("| (Kolom,Baris) : (", tagged_col[i],",", tagged_row[i],")  |")
             print("------------------------------")
 
+# fungsi untuk mengosongkan seat pilihan
 def deleteSeat(seat):
+    """
+    Kamus:
+    seat = seat = array 2 dimensi(matriks) yang mencakup koordinat seat cinema
+    column = int, indeks seat kolom
+    rows = int, indeks seat baris
+    """
     printSeat()
     print("Pilih nomor seat yang akan dikosongkan")
     column = int(input("Kolom : "))
+    # error handling saat input kolom
     while column < 0 or column > 15:
         column = int(input("Masukan salah!\nKolom : "))
     rows = int(input("Baris : "))
+    # error handling saat input baris
     while rows < 0 or rows > 9:
         rows = int(input("Masukan salah!\nBaris : "))
-    if rows == 1 or rows == 2:
+    if rows == 1 or rows == 2:  # kondisi baris yang dipilih adalah sweetbox
         if seat[column][rows] == "S":
             print("Seat tersebut kosong")
         else: # kondisi seat = "X"
@@ -291,21 +334,24 @@ def deleteSeat(seat):
             print("Seat berhasil dikosongkan")
     else: # untuk reguler
         if seat[column][rows] == "R":
+            printSeat()
             print("Seat sudah kosong")
         else: # kondisi "X" status booked
             seat[column][rows] = "R"
+            printSeat()
             print("Seat berhasil dikosongkan")
 
-#----------------- MAIN --------------------
+#============================================ M A I N =====================================================#
 seat = [["R" for j in range(10)] for i in range(16)]    # membuat default seat
 changeVisualSB(seat)    # merubah visual sweet box menjadi char "SB"
 
 close = False
 while close == False:
     intro()
-    pilihan_intro = int(input("Pilih Peran (1 atau 2)"))
+    pilihan_intro = int(input("Pilih Peran (1 atau 2): "))
+    # eror handling jika masukan tidak sesuai pilihan
     while pilihan_intro != 1 and pilihan_intro != 2:
-        pilihan_intro = int(input("Masukan salah!\nPilih Peran (1 atau 2)"))
+        pilihan_intro = int(input("Masukan salah!\nPilih Peran (1 atau 2): "))
     
     if pilihan_intro == 2:  # sebagai customer
         selesai_order = False         
@@ -344,14 +390,25 @@ while close == False:
                     ticket(j_org,type,tagged_col,tagged_row)
 
             pick = input("Ingin menambah pesanan? y/t:")
+            # error handling
             while pick != "t" and pick != "y":
                 pick = input("Ulangi masukan: ")
             if pick == "t":
                 selesai_order = True 
         
     else:   # sebagai waiters
+
+        # sebelum masuk menu harus log in terlebih dahulu
+        id = str(input("ID : "))
+        password = str(input("Password : "))
+        while id != "waiters" or password != "inipassword":
+            print("ID atau password salah.")
+            id = str(input("ID : "))
+            password = str(input("Password : "))
+
         waitersMenu()
         pilihan_waiters = int(input("Masukan pilihan menu : "))
+        # error handling
         while pilihan_waiters < 1 or pilihan_waiters > 3:
             pilihan_waiters = int(input("Masukan salah!\nMasukan pilihan menu : "))
         
@@ -360,6 +417,7 @@ while close == False:
             while stop_delete == False:
                 deleteSeat(seat)
                 pick = input("Ingin kosongkan seat lain? (y/t) : ")
+                # error handling
                 while pick != "y" and pick != "t":
                     pick = input("Masukan salah!\nIngin kosongkan seat lain? (y/t) : ")
                 if pick == "t":
@@ -401,6 +459,7 @@ while close == False:
                         ticket(j_org,type,tagged_col,tagged_row)
 
                 pick = input("Ingin menambah pesanan? y/t:")
+                # error handling
                 while pick != "t" and pick != "y":
                     pick = input("Ulangi masukan: ")
                 if pick == "t":
